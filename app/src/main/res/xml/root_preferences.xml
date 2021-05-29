@@ -1,0 +1,43 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Server configuration">
+        <EditTextPreference
+            android:defaultValue="2004"
+            android:key="port"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Port on which server must run,must be greater than 1024"
+            android:title="Server port" />
+        <EditTextPreference
+            android:defaultValue="/sdcard"
+            android:key="document_root"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Default folder from where files are to be served"
+            android:title="Document root" />
+        <EditTextPreference
+            android:defaultValue="index.html"
+            android:key="index_page"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="This page is loaded by default in a directory,if file name is not specified"
+            android:title="Index page" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="allow_directory_listing"
+            android:summary="List all files in a directory if specified index page is not found in that directory"
+            android:title="Allow directory listing" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Appearance">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:summary="Toggle dark theme"
+            app:key="dark_theme"
+            app:title="Dark theme" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
