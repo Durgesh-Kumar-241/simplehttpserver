@@ -15,5 +15,5 @@ Steps:
   4.Open that address in your PC (in any browser like chrome).
   6.Now you can see the list of all files which are available in your sdcard.
 
-Samle Application can be found at:
+Sample Application can be found at:
 https://play.google.com/store/apps/details?id=com.dktechhub.mnnit.ee.simplehttpserver
