@@ -60,9 +60,18 @@ port.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
 port.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if(Integer.parseInt((String) newValue)>1024)
-            return true;
-        Toast.makeText(getContext(), "port must be greater than 1024", Toast.LENGTH_SHORT).show();
+        try{
+            int port =Integer.parseInt((String) newValue);
+
+            if(port>1024&&port<65536)
+                return true;
+            else Toast.makeText(getContext(), "port must be between 1024 and 65535", Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "port must be between 1024 and 65535", Toast.LENGTH_SHORT).show();
+        }
+
+
         return false;
     }
 });

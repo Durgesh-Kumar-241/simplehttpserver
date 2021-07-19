@@ -28,19 +28,7 @@ public class RunningService extends Service {
         {
             serviceInterface.onServerStarted();
         }
-        httpServer=new HTTPServer(getApplicationContext(), new HTTPServer.HTTPInterface() {
-            @Override
-            public void log(String s) {
-                RunningService.this.log(s);
-            }
-
-            @Override
-            public void notifyOnff(int port, boolean on) {
-                RunningService.this.notifyOnOf(port,on);
-            }
-
-
-        });
+        httpServer=new HTTPServer(getApplicationContext(), RunningService.this::log);
         httpServer.startServing();
     }
     @Override
@@ -79,10 +67,7 @@ public class RunningService extends Service {
         return null;
     }
 
-    public void setServiceInterface(ServiceInterface serviceInterface)
-    {
-        this.serviceInterface=serviceInterface;
-    }
+
 
     public interface ServiceInterface{
         void onServerStarted();
@@ -98,12 +83,5 @@ public class RunningService extends Service {
         this.sendBroadcast(local);
     }
 
-    public void notifyOnOf(int port,boolean on)
-    {
-        Intent local=new Intent();
-        local.setAction("com.dktechhub.mnnit.ee.simplehttpserver.onoffmanager");
-        local.putExtra("on",true);
-        local.putExtra("port",port);
-        this.sendBroadcast(local);
-    }
+
 }

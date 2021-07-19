@@ -4,11 +4,11 @@
     <PreferenceCategory app:title="Server configuration">
         <EditTextPreference
             android:defaultValue="2004"
-            android:key="port"
             android:inputType="number"
+            android:key="port"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Port on which server must run,must be greater than 1024"
+            android:summary="Port to run server ( must be between 1024 and 65535)"
             android:title="Server port" />
         <EditTextPreference
             android:defaultValue="/sdcard"
@@ -25,7 +25,7 @@
             android:summary="This page is loaded by default in a directory,if file name is not specified"
             android:title="Index page" />
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="allow_directory_listing"
             android:summary="List all files in a directory if specified index page is not found in that directory"
             android:title="Allow directory listing" />

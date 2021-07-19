@@ -1,5 +1,7 @@
 package com.dktechhub.mnnit.ee.simplehttpserver;
 
+
+
 import android.content.Context;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
@@ -26,6 +28,10 @@ public class IpDetector {
         this.context = context;
         wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         this.onIpGet=onIpGet;
+
+    }
+    public void update()
+    {
         getLocalIP();
         getIPAddress(true);
     }
@@ -133,4 +139,5 @@ public class IpDetector {
         void localIp(String s,boolean isConnected);
         void globalIp(String s,boolean isConnected);
     }
-    }
+}
+

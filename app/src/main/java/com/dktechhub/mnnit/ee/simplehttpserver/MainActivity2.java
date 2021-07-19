@@ -69,21 +69,10 @@ public class MainActivity2 extends AppCompatActivity {
             }
         };
         registerReceiver(broadcastReceiver, filter);
-
-        IntentFilter filter2 = new IntentFilter();
-        filter2.addAction("com.dktechhub.mnnit.ee.simplehttpserver.onoffmanager");
-        onOfManager = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                boolean on = intent.getBooleanExtra("on", false);
-                if (on) {
-                    logsFragment.onServerStarted(intent.getIntExtra("port", 0));
-                }
+        SharedPreferences sharedPreference= PreferenceManager.getDefaultSharedPreferences(this);
+        int port=Integer.parseInt(sharedPreference.getString("port", String.valueOf(2004)));
 
 
-            }
-        };
-        registerReceiver(onOfManager, filter2);
 
 
         actionButton = findViewById(R.id.start);
@@ -92,7 +81,7 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(new URL(logsFragment.getLocal()))));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(new URL("http://localhost:"+port))));
                     startActivity(Intent.createChooser(intent, "Open browser"));
                 } catch (Exception e) {
                     Toast.makeText(MainActivity2.this, "failed", Toast.LENGTH_SHORT).show();
@@ -148,7 +137,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
-        unregisterReceiver(onOfManager);
+
     }
 
     public void toggleService()

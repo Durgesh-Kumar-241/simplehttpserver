@@ -33,6 +33,7 @@ public class HTTPServer {
 
     private HTTPInterface webShareServerInterface;
     private ConnectionListener connectionListner;
+    private HashMap<String ,String> loggedInStatus=new HashMap<>();
     private final String documentRoot;
     private final int port;
     private final boolean allowDirectoryListing;
@@ -45,12 +46,22 @@ public class HTTPServer {
         allowDirectoryListing=sharedPreference.getBoolean("allow_directory_listing",true);
         indexPage=sharedPreference.getString("index_page","index.html");
     }
+
+
+    private boolean isAlreadyLoggedIn(String uname,String pass)
+    {
+        return loggedInStatus.containsKey(uname) && loggedInStatus.get(uname).equals(pass);
+    }
+
+
+
+
     @SuppressLint("DefaultLocale")
     public void startServing()
-    {webShareServerInterface.notifyOnff(port,true);
+    {//webShareServerInterface.notifyOnff(port,true);
         webShareServerInterface.log(String.format("Starting http server with following configuration:\nDocument root:%s\nPort:%d\nIndex page:%s,\nAllow directory listing:%s",documentRoot,port,indexPage,allowDirectoryListing));
         if(null==connectionListner||connectionListner.isCancelled)
-        {this.connectionListner= new ConnectionListener();
+        {this.connectionListner= new ConnectionListener(port);
             connectionListner.start();
         }
 
@@ -213,25 +224,7 @@ public class HTTPServer {
                             this.respond("Directory listing not allowed,enter an existing filename to view", 404);
                         }
                     }
-                    /*
-                    File[] list = f.listFiles();
-                    outputStream.write(("HTTP/1.1 200 \r\n").getBytes());
-                    outputStream.write(("Content-Type: text/html\r\n").getBytes());
-                    outputStream.write("\r\n".getBytes());
-                    outputStream.write("<html>\r\n".getBytes());
-                    for (File s : list
-                    ) {
-                        String temp;
-                       // temp = s.getAbsolutePath().replace(root, "");
-                       // outputStream.write(("<a href='" + temp + "'>" + s.getName() + "</a><br>" + "\r\n").getBytes());
 
-                    }
-                    outputStream.write("</html>\r\n".getBytes());
-                    outputStream.write("\r\n\r\n".getBytes());
-                    outputStream.flush();
-                    current = f.getPath();
-
-                     */
 
                 } else {
                     this.respond("Error 404:Not Found", 404);
@@ -274,16 +267,16 @@ public class HTTPServer {
     public class ConnectionListener extends Thread{
         boolean isCancelled=false;
         ServerSocket serverSocket;
-
-        public ConnectionListener()
+        int port;
+        public ConnectionListener(int port)
         {
-
+        this.port=port;
         }
         @Override
         public void run() {
             super.run();
             try {
-                serverSocket = new ServerSocket(2004);
+                serverSocket = new ServerSocket(this.port);
                 while (!isCancelled)
                 {   try {
                     new SingleClientHandler(serverSocket.accept()).start();
@@ -303,6 +296,6 @@ public class HTTPServer {
 
     public interface HTTPInterface{
         void log(String s);
-        void notifyOnff(int port,boolean on);
+        //void notifyOnff(int port,boolean on);
     }
 }

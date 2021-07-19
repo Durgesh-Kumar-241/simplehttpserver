@@ -23,12 +23,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class LogsFragment extends Fragment {
+public class LogsFragment extends Fragment implements View.OnClickListener {
 
     private TextView logger;
     private TextView localIp, globalIp;
     private DateFormat simpleDateFormat;
-    BroadcastReceiver broadcastReceiver;
+
+    IpDetector ipDetector;
     int port=2004;
 
     @SuppressLint("SimpleDateFormat")
@@ -41,71 +42,31 @@ public class LogsFragment extends Fragment {
         logger = root.findViewById(R.id.logger);
         localIp = root.findViewById(R.id.localip);
         globalIp = root.findViewById(R.id.globalip);
-
-        this.simpleDateFormat = new SimpleDateFormat("HH:mm:ss ");
-        setupViewsWithurl();
-        //onServerStarted(1234);
-        return root;
-    }
-
-    public void onServerStarted(int port) {
-        this.port=port;
-        IpDetector ipDetector = new IpDetector(getContext(), new IpDetector.OnIpGet() {
+        ipDetector=new IpDetector(getContext(), new IpDetector.OnIpGet() {
             @Override
             public void localIp(String s, boolean isConnected) {
-                if (isConnected) {
+                if(isConnected)
                     localIp.setText("http://" + s + ":" + port);
-                    localIp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try{
-                                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(getLocal()));
-                                startActivity(Intent.createChooser(intent,"Open browser"));
-                            }catch (Exception e)
-                            {
-                                Toast.makeText(LogsFragment.this.getContext(), "failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-                else
-                    localIp.setText(s);
+                else localIp.setText("Not connected");
             }
 
             @Override
             public void globalIp(String s, boolean isConnected) {
-                if (isConnected){
+                if(isConnected)
                     globalIp.setText("http://" + s + ":" + port);
-                    globalIp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try{
-                                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(globalIp.getText().toString()));
-                                startActivity(Intent.createChooser(intent,"Open browser"));
-                            }catch (Exception e)
-                            {
-                                Toast.makeText(LogsFragment.this.getContext(), "failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-
-                else
-                    globalIp.setText(s);
+                else globalIp.setText("Not connected");
             }
         });
-        ipDetector.getLocalIP();
-        ipDetector.getIPAddress(true);
+        localIp.setOnClickListener(this);
+        globalIp.setOnClickListener(this);
+        this.simpleDateFormat = new SimpleDateFormat("HH:mm:ss ");
+        setupViewsWithurl();
+        return root;
     }
 
-    public String getLocal()
-    {
-        if(globalIp.getText().toString().contains("http://"))
-            return globalIp.getText().toString();
-        else if(localIp.getText().toString().contains("http://"))
-            return localIp.getText().toString();
-        else return "http://localhost:"+this.port;
-    }
+
+
+
 
     public void log(String text)
             {   try {
@@ -122,7 +83,18 @@ public class LogsFragment extends Fragment {
     {
         SharedPreferences sharedPreference= PreferenceManager.getDefaultSharedPreferences(this.getContext());
         int port=Integer.parseInt(sharedPreference.getString("port", String.valueOf(2004)));
-        onServerStarted(port);
+        this.port=port;
+        ipDetector.update();
+    }
 
+    @Override
+    public void onClick(View v) {
+        try{
+            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://localhost:"+this.port));
+            startActivity(Intent.createChooser(intent,"Open browser"));
+        }catch (Exception e)
+        {
+            Toast.makeText(LogsFragment.this.getContext(), "failed", Toast.LENGTH_SHORT).show();
+        }
     }
 }
