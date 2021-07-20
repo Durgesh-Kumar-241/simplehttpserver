@@ -33,7 +33,7 @@ public class HTTPServer {
 
     private HTTPInterface webShareServerInterface;
     private ConnectionListener connectionListner;
-    private HashMap<String ,String> loggedInStatus=new HashMap<>();
+    //private HashMap<String ,String> loggedInStatus=new HashMap<>();
     private final String documentRoot;
     private final int port;
     private final boolean allowDirectoryListing;
@@ -48,10 +48,7 @@ public class HTTPServer {
     }
 
 
-    private boolean isAlreadyLoggedIn(String uname,String pass)
-    {
-        return loggedInStatus.containsKey(uname) && loggedInStatus.get(uname).equals(pass);
-    }
+
 
 
 
