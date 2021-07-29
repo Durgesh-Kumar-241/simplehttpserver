@@ -101,7 +101,7 @@ public class HTTPServer {
         @Override
         public void run() {
             super.run();
-            HTTPServer.this.webShareServerInterface.log("New connection arrived");
+            HTTPServer.this.webShareServerInterface.log("New connection arrived from :"+socket.getRemoteSocketAddress());
 
             try {
                 this.decodeHeaders();
